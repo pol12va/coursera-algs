@@ -1,0 +1,3 @@
+javac Permutation.java -cp ../lib/algs4.jar RandomizedQueue.java
+
+java -cp ./bin:lib/algs4.jar Permutation 3 < bin/distinct.txt
