@@ -14,7 +14,6 @@ public class Board {
         }
 
         boardBlocks = new int[blocks.length][];
-//        goalBoardBlocks = new int[blocks.length][];
         initBoard(blocks);
         calculateHamming();
         calculateManhattan();
@@ -46,21 +45,21 @@ public class Board {
 
     public Board twin() {
         int[][] twinBlocks = new int[boardBlocks.length][boardBlocks.length];
+
         for (int i = 0; i < boardBlocks.length; i++) {
             System.arraycopy(boardBlocks[i], 0, twinBlocks[i], 0, boardBlocks[i].length);
         }
 
-        return new Board(twinBlocks);
-//        if (emptyBlockY + 1 < dimension()) {
-//            return neighbor(emptyBlockX, emptyBlockY + 1);
-//        } else if (emptyBlockY - 1 >= 0) {
-//            return neighbor(emptyBlockX, emptyBlockY - 1);
-//        } else if (emptyBlockX + 1 < dimension()) {
-//            return neighbor(emptyBlockX + 1, emptyBlockY);
-//        } else {
-//            return neighbor(emptyBlockX - 1, emptyBlockY);
-//        }
+        if (boardBlocks.length > 1) {
+            int x1 = 0;
+            int y1 = emptyBlockY == 0 ? 1 : 0;
+            int x2 = boardBlocks.length - 1;
+            int y2 = emptyBlockY == 0 ? 1 : 0;
 
+            exch(twinBlocks, x1, y1, x2, y2);
+        }
+
+        return new Board(twinBlocks);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class Board {
         if (y == null) {
             return false;
         }
-        if (!(getClass() != y.getClass())) {
+        if (getClass() != y.getClass()) {
             return false;
         }
 
@@ -163,9 +162,9 @@ public class Board {
         }
     }
 
-    private void exch(int[][] a, int x2, int y2) {
-        int tmp = a[emptyBlockX][emptyBlockY];
-        a[emptyBlockX][emptyBlockY] = a[x2][y2];
+    private void exch(int[][] a, int x1, int y1, int x2, int y2) {
+        int tmp = a[x1][y1];
+        a[x1][y1] = a[x2][y2];
         a[x2][y2] = tmp;
     }
 
@@ -192,7 +191,7 @@ public class Board {
         for (int i = 0; i < boardBlocks.length; i++) {
             System.arraycopy(boardBlocks[i], 0, twinBlocks[i], 0, boardBlocks[i].length);
         }
-        exch(twinBlocks, x, y);
+        exch(twinBlocks, emptyBlockX, emptyBlockY, x, y);
 
         return new Board(twinBlocks);
     }
@@ -204,12 +203,14 @@ public class Board {
                 { 7, 8, 6 }
         };
 
+        int[][] initialBlocks2 = new int[][] {
+                { 1 }
+        };
+
         Board b = new Board(initialBlocks);
         System.out.println("Initial board:");
         System.out.println(b);
         System.out.println("empty block = (" + b.emptyBlockX + ", " + b.emptyBlockY + ")\n");
-        System.out.println("Goal board:");
-//        System.out.println(b.goalBoardToString());
 
         for (Board neighbor : b.neighbors()) {
             System.out.println(neighbor);
@@ -218,5 +219,12 @@ public class Board {
         assert !b.isGoal();
         assert b.hamming() == 3;
         assert b.manhattan() == 3;
+
+        System.out.println("Twin:");
+        System.out.println(b.twin());
+
+        Board b1 = new Board(initialBlocks2);
+        System.out.println("Twin 1:");
+        System.out.println(b1.twin());
     }
 }
