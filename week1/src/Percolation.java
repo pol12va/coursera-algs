@@ -7,6 +7,7 @@ public class Percolation {
     private int openCount;
     private boolean[] openSites;
 
+
     public Percolation(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException("size is incorrect");
